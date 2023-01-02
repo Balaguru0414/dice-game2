@@ -1,18 +1,152 @@
 'use strict';
 
-let leftScore = document.querySelector('#current--0').textContent;
-let rightScore = document.querySelector('#current--1').textContent;
+// >>>>>>>>>>>>>>>>>>>>>> | Selecting Elements | >>>>>>>>>>>>>>>>>>>>>>  
 
-console.log(leftScore);
-console.log(rightScore);
+// players
+	const player0El = document.querySelector('.player--0');
+	const player1El = document.querySelector('.player--1');
+
+// scores
+	const score0El = document.querySelector('#score--0');
+	const score1El = document.querySelector('#score--1');
+
+// current Score
+	const current0El = document.querySelector('#current--0');
+	const current1El = document.querySelector('#current--1');
+
+// image
+	const diceEl = document.querySelector('.dice');
+
+// buttons
+	const btnNew = document.querySelector('.btn--new');
+	const btnRoll = document.querySelector('.btn--roll');
+	const btnHold = document.querySelector('.btn--hold');
+
+// >>>>>>>>>>>>>>>>>>>>>> | Starting Conditions | >>>>>>>>>>>>>>>>>>>>>> 
+
+// scores
+	score0El.textContent = 0;
+	score1El.textContent = 0;
+
+// image
+	diceEl.classList.add('hidden');
+
+let scores = [0,0];
+let currentScore = 0;
+let activePlayer = 0;
+let totalScore = 0;
+
+let playing = true;
+
+const switchPlayer = function () {
+	document.querySelector(`#current--${activePlayer}`).textContent = 0;
+	currentScore = 0;			
+	activePlayer = activePlayer === 0 ? 1 : 0;			
+
+	player0El.classList.toggle('player--active');
+	player1El.classList.toggle('player--active');
+}
+
+// >>>>>>>>>>>>>>>>>>>>>> | Rolling Dice Functionality | >>>>>>>>>>>>>>>>>>>>>> 
+
+btnRoll.addEventListener('click',function () {
+
+	if (playing) {
+
+	// 1. generating random dice roll
+
+		const dice = Math.trunc(Math.random() * 6) + 1;
+
+	console.log(dice);
+
+	// 2. display the dice roll
+
+		diceEl.classList.remove('hidden');
+		diceEl.src = `images/dice-${dice}.png`
+
+	// 3. if dice roll is -  1 -  switch to next player
+
+		if (dice !== 1) {
+			// add dice current Score
+
+			currentScore += dice;
+			document.querySelector(`#current--${activePlayer}`).textContent = currentScore;
+			
+		} else {
+			// switch to next player
+			switchPlayer();
+		}
+	}
+});
+
+// >>>>>>>>>>>>>>>>>>>>>> | Hold button functionality | >>>>>>>>>>>>>>>>>>>>>> 
+
+btnHold.addEventListener('click',function () {
+
+	if (playing) {
+
+	// 1. add current score to active player score
+
+		scores[activePlayer] += currentScore;
+		document.querySelector(`#score--${activePlayer}`).textContent = scores[activePlayer];
+
+	// 2. check if player score >= 100
+
+		if (scores[activePlayer] >= 20) {
+			// finish game
+				playing = false;
+				document.querySelector(`.player--${activePlayer}`).classList.add('player--winner');
+
+				document.querySelector(`.player--${activePlayer}`).classList.remove('player--active'); 
+				// இருந்தாலும் ஒன்று இல்லாவிட்டாலும் ஒன்று
+
+				diceEl.classList.add('hidden');
+		} else {
+			// switch the next player
+				switchPlayer();
+		}
+	}
+});
+
+// >>>>>>>>>>>>>>>>>>>>>> | New Game | >>>>>>>>>>>>>>>>>>>>>>  
+
+btnNew.addEventListener('click',function () {
+	playing = true;
+
+	currentScore = 0;
+	scores = [0,0];
+
+	diceEl.classList.add('hidden');
+
+	document.querySelector(`.player--${activePlayer}`).classList.remove('player--winner');
+
+	score0El.textContent = 0;
+	score1El.textContent = 0;
+	current0El.textContent = 0;
+	current1El.textContent = 0;
+
+});
+
+
+
+
+
+
+/*********************************************************************************************************************************************
+let leftScore = Number(document.querySelector('#score--0').textContent);
+let rightScore = Number(document.querySelector('#score--1').textContent );
+
+console.log(leftScore,typeof leftScore);
+console.log(rightScore, typeof rightScore);
 
 // >>>>>>>>>>>>>>>>>>>>>> | New Game | >>>>>>>>>>>>>>>>>>>>>>  
 
 const newGame = function () {
-	document.querySelector('#score--0').textContent = '';
-	document.querySelector('#score--1').textContent = '';
+	document.querySelector('#score--0').textContent = 0;
+	document.querySelector('#score--1').textContent = 0;
 	document.querySelector('#current--0').textContent = 0;
 	document.querySelector('#current--1').textContent = 0;
+	// document.querySelector('.dice').classList.add('hidden');
 }
 
 // >>>>>>>>>>>>>>>>>>>>>> | Roll Dice | >>>>>>>>>>>>>>>>>>>>>>
@@ -20,6 +154,8 @@ const newGame = function () {
 const rollDice = function () {
 	let randomNumber = Math.trunc(Math.random() * 6) +1;
 	// console.log(randomNumber);
+
+	// document.querySelector('.dice').classList.remove('hidden');
 
 	let  roll = `images/dice-${randomNumber}.png`;
 	// console.log(roll);
@@ -61,10 +197,13 @@ const hold = function () {
 	if (document.querySelector('.player--0').classList.contains('player--active')) {
 		document.querySelector('.player--0').classList.remove('player--active');
 		document.querySelector('.player--1').classList.add('player--active');
-		// console.log(leftScore);
-		let leftCurrentScore = document.querySelector('#current--0').textContent;
+		// console.log(leftScore);		
 
-		document.querySelector('#score--0').textContent = leftCurrentScore;	
+		let leftCurrentScore = Number(document.querySelector('#current--0').textContent);
+
+		leftScore += leftCurrentScore;
+		leftTotal = leftScore;
+		document.querySelector('#score--0').textContent = leftTotal;
 	
 		document.querySelector('#current--0').textContent = 0;
 	
@@ -75,9 +214,11 @@ const hold = function () {
 		document.querySelector('.player--1').classList.remove('player--active');
 		document.querySelector('.player--0').classList.add('player--active');
 
-		let rightCurrentScore = document.querySelector('#current--1').textContent;
+		let rightCurrentScore = Number(document.querySelector('#current--1').textContent);
 
-		document.querySelector('#score--1').textContent = rightCurrentScore;
+		rightScore += rightCurrentScore;
+		rightTotal = rightScore;
+		document.querySelector('#score--1').textContent = rightTotal;
 
 		document.querySelector('#current--1').textContent = 0;
 	}	
@@ -90,7 +231,4 @@ document.querySelector('.btn--new').addEventListener('click',newGame);
 document.querySelector('.btn--hold').addEventListener('click',hold);
 
 document.querySelector('.btn--roll').addEventListener('click',rollDice);
-
-
-
-
+*/
