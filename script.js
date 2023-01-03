@@ -107,7 +107,7 @@
 
 	// 2. check if player score >= 100
 
-		if (scores[activePlayer] >= 20) {
+		if (scores[activePlayer] >= 100) {
 			// finish game
 				playing = false;
 				document.querySelector(`.player--${activePlayer}`).classList.add('player--winner');
@@ -153,7 +153,7 @@ document.addEventListener('keydown',function (e) {
 });
 
 /***********************************************************| My Code |***************************************************************
- 
+
 let leftScore = Number(document.querySelector('#score--0').textContent);
 let rightScore = Number(document.querySelector('#score--1').textContent );
 
