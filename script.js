@@ -130,7 +130,7 @@ btnHold.addEventListener('click',holdBtn);
 
 btnNew.addEventListener('click',init);
 
-// >>>>>>>>>>>>>>>>>>>>>> | key event | >>>>>>>>>>>>>>>>>>>>>> 
+/*// >>>>>>>>>>>>>>>>>>>>>> | key event | >>>>>>>>>>>>>>>>>>>>>> 
 
 document.addEventListener('keydown',function (e) {
 
@@ -150,7 +150,7 @@ document.addEventListener('keydown',function (e) {
 		holdBtn();
 	}
 	
-});
+});*/
 
 /***********************************************************| My Code |***************************************************************
 
